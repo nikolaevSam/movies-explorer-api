@@ -7,6 +7,9 @@ const bodyParser = require('body-parser');
 
 const app = express();
 
+const handlerError = require('./middlewares/handlerError');
+const router = require('./routes/index');
+
 const { PORT, URL } = process.env;
 
 mongoose.connect(URL);
@@ -17,7 +20,9 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(cors());
 app.use(helmet());
+app.use(router);
+app.use(handlerError);
 
-app.listen(() => {
+app.listen(PORT, () => {
   console.log(`App listening on port ${PORT}!`);
 });
