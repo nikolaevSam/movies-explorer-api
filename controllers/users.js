@@ -12,22 +12,19 @@ const {
 
 module.exports.createUser = (req, res, next) => {
   const {
-    email, password, name,
+    name, email, password,
   } = req.body;
 
   bcryptjs.hash(password, 10)
-    .then((hash) => {
-      User
-        .create({
-          email, name, password: hash,
-        });
-    })
-    .then(() => {
+    .then((hash) => User.create({
+      name, email, password: hash,
+    }))
+    .then((user) => {
       res
         .status(HTTP_STATUS_CREATED)
         .send({
-          email,
-          name,
+          name: user.name,
+          email: user.email,
         });
     })
     .catch((err) => {
@@ -37,7 +34,7 @@ module.exports.createUser = (req, res, next) => {
       if (err.name === 'ValidationError') {
         return next(new BadRequestError('Переданы некорректные данные при создании пользователя.'));
       }
-      return next();
+      return next(err);
     });
 };
 
@@ -56,8 +53,13 @@ module.exports.login = (req, res, next) => {
             : 'dev-secret',
           { expiresIn: '7d' },
         );
-        res.send({ token });
+        res
+          .send({ token });
       }
+    })
+    .then(() => {
+      res
+        .send({ message: 'Авторизация пройдена!' });
     })
     .catch(next);
 };
@@ -66,7 +68,11 @@ module.exports.getUser = (req, res, next) => {
   const { userId } = req.user;
   User.findById(userId)
     .orFail(new NotFoundError('Пользователь по указанному _id не найден.'))
-    .then((user) => res.status(HTTP_STATUS_OK).send(user))
+    .then((user) => {
+      res
+        .status(HTTP_STATUS_OK)
+        .send(user);
+    })
     .catch((err) => {
       if (err.name === 'CastError') {
         return next(new BadRequestError('Переданы некорректные данные.'));
@@ -91,7 +97,11 @@ module.exports.updateUser = (req, res, next) => {
     },
   )
     .orFail(new NotFoundError('Пользователь по указанному _id не найден.'))
-    .then((user) => res.status(HTTP_STATUS_OK).send(user))
+    .then((user) => {
+      res
+        .status(HTTP_STATUS_OK)
+        .send(user);
+    })
     .catch((err) => {
       if (err.name === 'ValidationError' || err.name === 'CastError') {
         return next(new BadRequestError('Переданы некорректные данные при обновлении профиля.'));
