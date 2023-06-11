@@ -39,16 +39,16 @@ module.exports.updateUserValidation = celebrate({
 
 module.exports.movieCreateValidation = celebrate({
   body: Joi.object().keys({
-    country: Joi.string().required.min(2).max(20),
-    director: Joi.string().required.min(2).max(20),
+    country: Joi.string().required().min(2).max(20),
+    director: Joi.string().required().min(2).max(20),
     duration: Joi.string().required(),
     year: Joi.string().required(),
-    description: Joi.string().required.min(5).max(30),
+    description: Joi.string().required().min(5).max(30),
     image: Joi.string().custom(urlValidation).required(),
     trailerLink: Joi.string().custom(urlValidation).required(),
     thumbnail: Joi.string().custom(urlValidation).required(),
-    nameRU: Joi.string().required.min(2).max(20),
-    nameEN: Joi.string().required.min(2).max(20),
+    nameRU: Joi.string().required().min(2).max(20),
+    nameEN: Joi.string().required().min(2).max(20),
   }),
 });
 
