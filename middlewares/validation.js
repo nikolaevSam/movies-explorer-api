@@ -6,18 +6,18 @@ const { linkRegex, idRegex } = require('../utils/constants');
 const urlValidation = (url) => {
   if (linkRegex.test(url)) {
     return url;
-  } return BadRequestError('Некорректный URL.');
+  } return new BadRequestError('Некорректный URL.');
 };
 
 const idValidation = (id) => {
   if (idRegex.test(id)) {
     return id;
-  } return BadRequestError('Некорректный id');
+  } return new BadRequestError('Некорректный id');
 };
 
 module.exports.loginValidation = celebrate({
   body: Joi.object().keys({
-    email: Joi.string().email().required(),
+    email: Joi.string().email().custom(urlValidation).required(),
     password: Joi.string().required(),
   }),
 });
@@ -25,7 +25,7 @@ module.exports.loginValidation = celebrate({
 module.exports.createUserValidation = celebrate({
   body: Joi.object().keys({
     name: Joi.string().min(2).max(30),
-    email: Joi.string().custom(urlValidation).required().email(),
+    email: Joi.string().required().email(),
     password: Joi.string().required(),
   }),
 });
@@ -47,8 +47,8 @@ module.exports.movieCreateValidation = celebrate({
     image: Joi.string().custom(urlValidation).required(),
     trailerLink: Joi.string().custom(urlValidation).required(),
     thumbnail: Joi.string().custom(urlValidation).required(),
-    nameRU: Joi.string().required().min(2).max(20),
-    nameEN: Joi.string().required().min(2).max(20),
+    nameRU: Joi.string().required().min(2).max(50),
+    nameEN: Joi.string().required().min(2).max(50),
   }),
 });
 

@@ -7,47 +7,22 @@ const { HTTP_STATUS_CREATED, HTTP_STATUS_OK } = require('../utils/constants');
 module.exports.getMovies = (req, res, next) => {
   const { userId } = req.user;
 
-  Movie.find(userId)
+  Movie.find({ owner: userId })
     .then((movies) => res.send(movies))
     .catch(next);
 };
 
 module.exports.createMovie = (req, res, next) => {
   const { userId } = req.user;
-  const {
-    country,
-    director,
-    duration,
-    year,
-    description,
-    image,
-    trailerLink,
-    thumbnail,
-    owner,
-    nameRU,
-    nameEN,
-  } = req.body;
 
-  Movie.create(
-    {
-      country,
-      director,
-      duration,
-      year,
-      description,
-      image,
-      trailerLink,
-      thumbnail,
-      owner: userId,
-      nameRU,
-      nameEN,
-    },
-  )
-    .population(owner)
-    .then((movie) => {
-      res
-        .status(HTTP_STATUS_CREATED)
-        .send(movie);
+  return Movie.countDocuments({})
+    .then((movieId) => {
+      Movie.create({ ...req.body, owner: userId, movieId })
+        .then((movie) => {
+          res
+            .status(HTTP_STATUS_CREATED)
+            .send(movie);
+        });
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {

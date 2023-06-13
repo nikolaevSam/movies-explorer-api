@@ -58,18 +58,25 @@ const movieSchema = mongoose.Schema(
       require: true,
       ref: 'user',
     },
+    movieId: {
+      type: Number,
+      required: true,
+    },
     nameRU: {
       type: String,
       required: true,
       minLength: 2,
-      maxLength: 20,
+      maxLength: 50,
     },
     nameEN: {
       type: String,
       required: true,
       minLength: 2,
-      maxLength: 20,
+      maxLength: 50,
     },
+  },
+  {
+    versionKey: false,
   },
 );
 
