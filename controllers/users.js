@@ -75,7 +75,7 @@ module.exports.getUser = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        return next(new BadRequestError('Переданы некорректные данные.'));
+        return next(new BadRequestError('Переданы некорректные данные!'));
       }
       return next(err);
     });
@@ -96,7 +96,7 @@ module.exports.updateUser = (req, res, next) => {
       runValidators: true,
     },
   )
-    .orFail(new NotFoundError('Пользователь по указанному _id не найден.'))
+    .orFail(new NotFoundError('Пользователь по указанному _id не найден!'))
     .then((user) => {
       res
         .status(HTTP_STATUS_OK)
