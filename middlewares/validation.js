@@ -32,7 +32,7 @@ module.exports.createUserValidation = celebrate({
 
 module.exports.updateUserValidation = celebrate({
   body: Joi.object().keys({
-    email: Joi.string().custom(urlValidation).email(),
+    email: Joi.string().email(),
     name: Joi.string().min(2).max(30),
   }),
 });

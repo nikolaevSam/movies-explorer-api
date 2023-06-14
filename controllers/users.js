@@ -57,10 +57,6 @@ module.exports.login = (req, res, next) => {
           .send({ token });
       }
     })
-    .then(() => {
-      res
-        .send({ message: 'Авторизация пройдена!' });
-    })
     .catch(next);
 };
 
@@ -103,8 +99,11 @@ module.exports.updateUser = (req, res, next) => {
         .send(user);
     })
     .catch((err) => {
-      if (err.name === 'ValidationError' || err.name === 'CastError') {
+      if (err.name === 'ValidationError') {
         return next(new BadRequestError('Переданы некорректные данные при обновлении профиля.'));
+      }
+      if (err.code === 11000) {
+        return next(new ConflictError(`Пользователь с email: ${email} уже существует.`));
       }
       return next(err);
     });

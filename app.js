@@ -3,14 +3,13 @@ require('dotenv').config();
 const cors = require('cors');
 const mongoose = require('mongoose');
 const helmet = require('helmet');
-const bodyParser = require('body-parser');
 const { errors } = require('celebrate');
 
 const app = express();
 
 const handlerError = require('./middlewares/handlerError');
 const auth = require('./middlewares/auth');
-const router = require('./routes/app');
+const router = require('./routes/index');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const rateLimiter = require('./middlewares/rateLimiter');
 const { createUser, login } = require('./controllers/users');
@@ -22,8 +21,8 @@ const {
 
 mongoose.connect(URL);
 app.use(requestLogger);
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 app.use(helmet());
 app.post('/signup', createUserValidation, createUser);
