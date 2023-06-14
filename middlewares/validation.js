@@ -17,7 +17,7 @@ const idValidation = (id) => {
 
 module.exports.loginValidation = celebrate({
   body: Joi.object().keys({
-    email: Joi.string().email().custom(urlValidation).required(),
+    email: Joi.string().email().required(),
     password: Joi.string().required(),
   }),
 });
